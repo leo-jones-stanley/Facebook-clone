@@ -1,6 +1,12 @@
 const express = require("express");
+const  cors = require("cors")
+const app = express();
+const useRoutes = require("./routes/user");
 
-app = express();
+
+
+app.use(cors());
+app.use('/',useRoutes);
 
 app.get('/dryRunTest',(req,res) => {
     res.send("Backend Server is Running ! !! !!!")
