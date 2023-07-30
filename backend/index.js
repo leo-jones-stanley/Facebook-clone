@@ -1,12 +1,13 @@
 const express = require("express");
+const { readFileSync} = require("fs") 
 const  cors = require("cors")
 const app = express();
-const useRoutes = require("./routes/user");
+// const useRoutes = require("./routes/user");
 
 
 
 app.use(cors());
-app.use('/',useRoutes);
+readFileSync('./routes')
 
 app.get('/dryRunTest',(req,res) => {
     res.send("Backend Server is Running ! !! !!!")
