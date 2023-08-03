@@ -1,17 +1,31 @@
 const express = require("express");
-const { readFileSync} = require("fs") 
-const  cors = require("cors")
+const fs = require("fs") 
+const cors = require("cors");
 const app = express();
-// const useRoutes = require("./routes/user");
-
-
+const path = require("path");
+const mongoose = require("mongoose");
+require('dotenv').config(); // Load environment variables from .env file
 
 app.use(cors());
-readFileSync('./routes')
+app.use(express.json());
 
-app.get('/dryRunTest',(req,res) => {
-    res.send("Backend Server is Running ! !! !!!")
-})
-app.listen(8000,() => {
-    console.log("the Server is running ")
-})
+const routeFiles = fs.readdirSync("./routes");
+
+// Dynamically load routes
+routeFiles.forEach((file) => {
+  const routePath = path.join(__dirname, "routes", file);
+  console.log(routePath)
+  app.use("/", require(routePath));
+});
+
+// Connect to MongoDB using the DB_URL environment variable
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
+  .then(() => {
+    console.log("Connected to MongoDB successfully!");
+    app.listen(process.env.PORT || 8000, () => {
+      console.log("The Server is running");
+    });
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
